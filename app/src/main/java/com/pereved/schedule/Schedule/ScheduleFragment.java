@@ -1,5 +1,6 @@
 package com.pereved.schedule.Schedule;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,11 +14,13 @@ import com.pereved.schedule.R;
 
 import java.util.Objects;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentStatePagerAdapter;
+import butterknife.BindDrawable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -25,6 +28,8 @@ public class ScheduleFragment extends Fragment {
 
     @BindView(R.id.logo_schedule)
     View logo;
+    @BindDrawable(R.drawable.nav_menu)
+    Drawable menu;
     @BindView(R.id.schedule_view_pager)
     MaterialViewPager scheduleViewPager;
 
@@ -38,19 +43,19 @@ public class ScheduleFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-        setupViewPager();
+        initUI();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
+    private void initUI() {
         setupToolbar();
+        setupViewPager();
     }
 
     private void setupToolbar() {
         Objects.requireNonNull(getActivity()).setTitle("");
         Toolbar toolbar = scheduleViewPager.getToolbar();
-        ((MainActivity)Objects.requireNonNull(getActivity())).setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(menu);
+        ((MainActivity) Objects.requireNonNull(getActivity())).setSupportActionBar(toolbar);
         MainActivity.result.setToolbar(getActivity(), toolbar);
     }
 
@@ -59,7 +64,7 @@ public class ScheduleFragment extends Fragment {
 
             @Override
             public Fragment getItem(int position) {
-                switch (position % 4) {
+                switch(position % 4) {
                     //case 0:
                     //    return RecyclerViewFragment.newInstance();
                     //case 1:
@@ -78,7 +83,7 @@ public class ScheduleFragment extends Fragment {
 
             @Override
             public CharSequence getPageTitle(int position) {
-                switch (position % 4) {
+                switch(position % 4) {
                     case 0:
                         return "Понедельник";
                     case 1:
@@ -95,7 +100,7 @@ public class ScheduleFragment extends Fragment {
         scheduleViewPager.setMaterialViewPagerListener(new MaterialViewPager.Listener() {
             @Override
             public HeaderDesign getHeaderDesign(int page) {
-                switch (page) {
+                switch(page) {
                     case 0:
                         return HeaderDesign.fromColorResAndDrawable(
                                 R.color.cyan, getResources().getDrawable(R.drawable.hd_schedule));

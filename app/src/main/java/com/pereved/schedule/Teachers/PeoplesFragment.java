@@ -1,5 +1,6 @@
 package com.pereved.schedule.Teachers;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentStatePagerAdapter;
+import butterknife.BindDrawable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -27,6 +29,8 @@ public class PeoplesFragment extends Fragment {
 
     @BindView(R.id.logo_peoples)
     View logo;
+    @BindDrawable(R.drawable.nav_menu)
+    Drawable menu;
     @BindView(R.id.peoples_view_pager)
     MaterialViewPager peoplesViewPager;
 
@@ -40,18 +44,18 @@ public class PeoplesFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-        setupViewPager();
+        initUI();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
+    private void initUI() {
         setupToolbar();
+        setupViewPager();
     }
 
     private void setupToolbar() {
         Objects.requireNonNull(getActivity()).setTitle("");
         Toolbar toolbar = peoplesViewPager.getToolbar();
+        toolbar.setNavigationIcon(menu);
         ((MainActivity) Objects.requireNonNull(getActivity())).setSupportActionBar(toolbar);
         MainActivity.result.setToolbar(getActivity(), toolbar);
     }
@@ -59,11 +63,12 @@ public class PeoplesFragment extends Fragment {
     private void setupViewPager() {
         peoplesViewPager.getViewPager().setAdapter(new FragmentStatePagerAdapter(getChildFragmentManager()) {
 
+            @NonNull
             @Override
             public Fragment getItem(int position) {
-                switch(position % 4) {
-                    //case 0:
-                    //    return RecyclerViewFragment.newInstance();
+                switch(position % 2) {
+                    case 0:
+                        return TeachersFragment.newInstance();
                     //case 1:
                     //    return RecyclerViewFragment.newInstance();
                     //case 2:

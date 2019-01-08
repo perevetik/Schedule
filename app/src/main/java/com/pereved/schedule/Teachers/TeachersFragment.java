@@ -1,4 +1,4 @@
-package com.pereved.schedule.Schedule;
+package com.pereved.schedule.Teachers;
 
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.github.florent37.materialviewpager.header.MaterialViewPagerHeaderDecorator;
 import com.pereved.schedule.R;
+import com.pereved.schedule.Schedule.ScheduleAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,21 +22,20 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class RecyclerViewFragment extends Fragment {
+//Created by Squirty on 08.01.2019.
+public class TeachersFragment extends Fragment {
 
-    private static final boolean GRID_LAYOUT = false;
-    private static final int ITEM_COUNT = 10;
+    @BindView(R.id.teachers_recycler) RecyclerView recyclerView;
+    private List<String> data;
 
-    @BindView(R.id.recyclerView)
-    RecyclerView mRecyclerView;
-
-    public static RecyclerViewFragment newInstance() {
-        return new RecyclerViewFragment();
+    public static TeachersFragment newInstance() {
+        return new TeachersFragment();
     }
 
+    @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_recyclerview, container, false);
+        return inflater.inflate(R.layout.teachers_fragment, container, false);
     }
 
     @Override
@@ -43,31 +43,30 @@ public class RecyclerViewFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
-        final List<Object> items = new ArrayList<>();
-
-        for(int i = 0; i < ITEM_COUNT; i ++) {
-            items.add(new Object());
-        }
-
-
-        //setup materialviewpager
-
         if (getScreenWidthDp() >= 1200) {
             final GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 3);
-            mRecyclerView.setLayoutManager(gridLayoutManager);
+            recyclerView.setLayoutManager(gridLayoutManager);
         } else if (getScreenWidthDp() >= 800) {
             final GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
-            mRecyclerView.setLayoutManager(gridLayoutManager);
+            recyclerView.setLayoutManager(gridLayoutManager);
         } else {
             final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-            mRecyclerView.setLayoutManager(linearLayoutManager);
+            recyclerView.setLayoutManager(linearLayoutManager);
         }
-        mRecyclerView.setHasFixedSize(true);
+        recyclerView.setHasFixedSize(true);
 
-        //Use this now
-        mRecyclerView.addItemDecoration(new MaterialViewPagerHeaderDecorator());
-        RecyclerView.Adapter adapter = new ScheduleAdapter(items);
-        mRecyclerView.setAdapter(adapter);
+        RecyclerView.Adapter adapter = new PeoplesAdapter(getContext());
+        ((PeoplesAdapter) adapter).setItems(getData());
+        recyclerView.addItemDecoration(new MaterialViewPagerHeaderDecorator());
+        recyclerView.setAdapter(adapter);
+    }
+
+    public List<String> getData() {
+        data = new ArrayList<>();
+        for (int i = 1; i <= 20; i++)
+            data.add("");
+
+        return data;
     }
 
     private int getScreenWidthDp() {
